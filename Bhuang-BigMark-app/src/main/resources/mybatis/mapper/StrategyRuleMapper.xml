@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhuang.infrastructure.persistent.dao.StrategyRuleDao">
+    <resultMap id="StrategyRuleResultMap" type="com.bhuang.infrastructure.persistent.po.StrategyRule">
+        <id property="id" column="id" />
+        <result property="strategyId" column="strategy_id" />
+        <result property="awardId" column="award_id" />
+        <result property="ruleType" column="rule_type" />
+        <result property="ruleModel" column="rule_model" />
+        <result property="ruleValue" column="rule_value" />
+        <result property="ruleDesc" column="rule_desc" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="selectById" resultMap="StrategyRuleResultMap">
+        SELECT * FROM strategy_rule WHERE id = #{id}
+    </select>
+    <select id="selectAll" resultMap="StrategyRuleResultMap">
+        SELECT * FROM strategy_rule
+    </select>
+    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.StrategyRule">
+        INSERT INTO strategy_rule (strategy_id, award_id, rule_type, rule_model, rule_value, rule_desc)
+        VALUES (#{strategyId}, #{awardId}, #{ruleType}, #{ruleModel}, #{ruleValue}, #{ruleDesc})
+    </insert>
+    <update id="update" parameterType="com.bhuang.infrastructure.persistent.po.StrategyRule">
+        UPDATE strategy_rule SET strategy_id=#{strategyId}, award_id=#{awardId}, rule_type=#{ruleType}, rule_model=#{ruleModel}, rule_value=#{ruleValue}, rule_desc=#{ruleDesc}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM strategy_rule WHERE id = #{id}
+    </delete>
+</mapper>
