@@ -11,4 +11,6 @@ public interface StrategyAwardDao {
     int insert(StrategyAward strategyAward);
     int update(StrategyAward strategyAward);
     int deleteById(Long id);
+    List<StrategyAward> queryStrategyAwardListByStrategyId(Long strategyId);
+    List<StrategyAward> queryStrategyAwardList();
 }
