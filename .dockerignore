@@ -1,0 +1,39 @@
+# Git 相关
+.git
+.github
+.gitignore
+README.md
+
+# Maven 构建相关
+*/target/
+!*/target/*.jar
+.mvn/
+mvnw*
+
+# IDE 相关
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# 操作系统相关
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+
+# Node.js (如果有前端资源)
+node_modules/
+npm-debug.log*
+
+# 其他
+.env
+.env.local
+.env.*.local
