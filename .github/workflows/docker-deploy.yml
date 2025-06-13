@@ -47,19 +47,26 @@ jobs:
           VERSION=${VERSION//\//-}
         fi
         
-        # 如果是主分支，添加 latest 标签
-        if [[ $VERSION == "main" ]] || [[ $VERSION == "master" ]]; then
-          TAGS="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+        # 生成基于 commit SHA 的版本标签 (8位短SHA)
+        COMMIT_VERSION="sha-${GITHUB_SHA::8}"
+        
+        # 始终包含 latest 标签和 commit 版本标签
+        TAGS="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+        TAGS="$TAGS,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$COMMIT_VERSION"
+        
+        # 如果是分支推送，也添加分支名标签
+        if [[ $GITHUB_REF == refs/heads/* ]]; then
           TAGS="$TAGS,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION"
-        else
-          TAGS="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION"
         fi
         
-        # 添加 commit SHA 作为额外标签
-        TAGS="$TAGS,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${GITHUB_SHA::8}"
+        # 如果是标签推送，使用标签名作为主版本
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          TAGS="$TAGS,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION"
+        fi
         
         echo "tags=$TAGS" >> $GITHUB_OUTPUT
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "version=$COMMIT_VERSION" >> $GITHUB_OUTPUT
+        echo "branch_or_tag=$VERSION" >> $GITHUB_OUTPUT
         
     - name: Create Dockerfile
       run: |
@@ -99,6 +106,7 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ steps.meta.outputs.tags }}
+        platforms: linux/amd64,linux/arm64
         cache-from: type=gha
         cache-to: type=gha,mode=max
         
@@ -113,13 +121,23 @@ jobs:
         echo "Registry: ${{ env.REGISTRY }}"
         echo "Repository: ${{ env.IMAGE_NAME }}"
         echo "Tags: ${{ steps.meta.outputs.tags }}"
+        echo "Platforms: linux/amd64, linux/arm64 (支持 Intel 和 Apple Silicon)"
+        echo ""
+        echo "🏷️  版本标签说明："
+        echo "• latest - 始终指向最新版本"
+        echo "• ${{ steps.meta.outputs.version }} - 本次提交的专属版本"
+        echo "• ${{ steps.meta.outputs.branch_or_tag }} - 分支或标签版本"
         echo ""
         echo "🚀 本地使用说明："
         echo ""
         echo "1️⃣ 登录阿里云 Docker Registry："
         echo "docker login --username=黄帅啊 ${{ env.REGISTRY }}"
         echo ""
-        echo "2️⃣ 拉取镜像："
+        echo "2️⃣ 拉取镜像（选择一个版本）："
+        echo "# 最新版本（推荐）"
+        echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+        echo ""
+        echo "# 本次提交的精确版本"
         echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}"
         echo ""
         echo "3️⃣ 运行容器（开发环境）："
@@ -127,7 +145,7 @@ jobs:
         echo "  --name bhuang-bigmark-app \\"
         echo "  -p 8091:8091 \\"
         echo "  -e SPRING_PROFILES_ACTIVE=dev \\"
-        echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}"
+        echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
         echo ""
         echo "4️⃣ 运行容器（生产环境）："
         echo "docker run -d \\"
@@ -136,7 +154,7 @@ jobs:
         echo "  -e SPRING_PROFILES_ACTIVE=prod \\"
         echo "  -e JAVA_OPTS='-Xms1g -Xmx2g' \\"
         echo "  --restart unless-stopped \\"
-        echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}"
+        echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
         echo ""
         echo "5️⃣ 查看应用日志："
         echo "docker logs -f bhuang-bigmark-app"
@@ -150,6 +168,9 @@ jobs:
         echo "健康检查: http://localhost:8091/actuator/health"
         echo ""
         echo "📝 提示："
+        echo "- 镜像支持 Intel (amd64) 和 Apple Silicon (arm64) 架构"
+        echo "- latest 标签总是指向最新推送的版本"
+        echo "- 每个 commit 都有独特的版本标签: ${{ steps.meta.outputs.version }}"
         echo "- 确保本地端口 8091 没有被占用"
         echo "- 如需修改端口，使用 -p 你的端口:8091"
         echo "- 生产环境建议配置外部数据库连接"

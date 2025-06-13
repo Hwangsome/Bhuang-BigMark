@@ -1,9 +1,12 @@
 # 🚀 Docker 快速开始指南
 
-## 📋 前提条件
+## 📋 系统要求
 
-- 安装 Docker
-- 有阿里云镜像仓库访问权限
+- **Docker Engine** 20.10+ 
+- **系统架构支持**：
+  - ✅ Intel/AMD (linux/amd64)
+  - ✅ Apple Silicon M1/M2 (linux/arm64)
+- **网络访问**：确保能访问阿里云镜像仓库
 
 ## 🎯 快速使用（推荐）
 
@@ -126,29 +129,48 @@ curl http://localhost:8091/actuator/health
 - **健康检查**: http://localhost:8091/actuator/health
 - **API文档**: http://localhost:8091/swagger-ui.html (如果配置了Swagger)
 
-## ⚠️ 常见问题
+## 🔄 常见问题
 
-**端口占用**
+### 端口冲突
 ```bash
-# 查看端口占用
-lsof -i :8091
-
-# 修改端口映射
-docker run -p 9091:8091 ...
+# 错误: port is already in use
+# 解决: 更改映射端口
+docker run -p 8092:8091 ...
 ```
 
-**容器名冲突**
+### 容器名称冲突
 ```bash
-# 停止并删除现有容器
+# 错误: name is already in use
+# 解决: 停止现有容器或使用不同名称
 docker stop bhuang-bigmark-app
 docker rm bhuang-bigmark-app
 ```
 
-**镜像更新**
+### 镜像更新
 ```bash
-# 强制拉取最新镜像
-docker pull crpi-wzl2k45d0lxbiagj.cn-shenzhen.personal.cr.aliyuncs.com/bhuang-repo/bhuang-bigmark:latest --no-cache
+# 拉取最新镜像
+./docker-run.sh pull latest
+./docker-run.sh update latest
 ```
+
+### ARM64/Apple Silicon 支持
+如果遇到 "no matching manifest for linux/arm64/v8" 错误：
+
+```bash
+# 1. 检查镜像是否支持您的架构
+docker manifest inspect crpi-wzl2k45d0lxbiagj.cn-shenzhen.personal.cr.aliyuncs.com/bhuang-repo/bhuang-bigmark:latest
+
+# 2. 强制拉取特定架构（如果需要）
+docker pull --platform linux/amd64 crpi-wzl2k45d0lxbiagj.cn-shenzhen.personal.cr.aliyuncs.com/bhuang-repo/bhuang-bigmark:latest
+
+# 3. 使用管理脚本（会自动处理架构问题）
+./docker-run.sh run
+```
+
+**说明**：
+- 🍎 **Apple Silicon (M1/M2)**：支持原生 ARM64 镜像
+- 💻 **Intel Mac/PC**：支持 AMD64 镜像  
+- 🔄 **自动适配**：Docker 会自动选择匹配的架构
 
 ## 🛟 获取帮助
 

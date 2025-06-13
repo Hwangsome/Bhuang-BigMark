@@ -1,21 +1,32 @@
 #!/bin/bash
 
-# Bhuang-BigMark Docker 镜像管理脚本
-# 使用方法: ./docker-run.sh [command] [options]
+# Docker 镜像管理脚本 - Bhuang-BigMark
+# 支持阿里云容器镜像服务的一键部署和管理
 
 # 配置变量
 REGISTRY="crpi-wzl2k45d0lxbiagj.cn-shenzhen.personal.cr.aliyuncs.com"
-IMAGE_NAME="bhuang-repo/bhuang-bigmark"
+REPOSITORY="bhuang-repo/bhuang-bigmark"
 CONTAINER_NAME="bhuang-bigmark-app"
 PORT="8091"
 DEFAULT_TAG="latest"
+DEFAULT_PROFILE="dev"
 
-# 颜色输出
+# 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# 检测系统架构
+ARCH=$(uname -m)
+if [[ "$ARCH" == "arm64" ]] || [[ "$ARCH" == "aarch64" ]]; then
+    PLATFORM_INFO="🍎 检测到 Apple Silicon (ARM64) 架构"
+elif [[ "$ARCH" == "x86_64" ]]; then
+    PLATFORM_INFO="💻 检测到 Intel (AMD64) 架构"
+else
+    PLATFORM_INFO="❓ 检测到 $ARCH 架构"
+fi
 
 # 打印带颜色的消息
 print_info() {
@@ -34,11 +45,12 @@ print_error() {
     echo -e "${RED}❌ $1${NC}"
 }
 
-# 显示帮助信息
-show_help() {
-    echo "Bhuang-BigMark Docker 镜像管理脚本"
+# 打印帮助信息
+print_help() {
+    echo -e "${BLUE}=== Bhuang-BigMark Docker 管理脚本 ===${NC}"
+    echo -e "${PLATFORM_INFO}"
     echo ""
-    echo "使用方法: $0 [命令] [选项]"
+    echo "用法: $0 <命令> [参数]"
     echo ""
     echo "命令:"
     echo "  login                    登录阿里云 Docker Registry"
@@ -77,7 +89,7 @@ docker_login() {
 # 拉取镜像
 pull_image() {
     local tag=${1:-$DEFAULT_TAG}
-    local image="${REGISTRY}/${IMAGE_NAME}:${tag}"
+    local image="${REGISTRY}/${REPOSITORY}:${tag}"
     
     print_info "拉取镜像: ${image}"
     docker pull ${image}
@@ -93,7 +105,7 @@ pull_image() {
 run_container() {
     local tag=${1:-$DEFAULT_TAG}
     local profile=${2:-dev}
-    local image="${REGISTRY}/${IMAGE_NAME}:${tag}"
+    local image="${REGISTRY}/${REPOSITORY}:${tag}"
     
     # 检查容器是否已经运行
     if docker ps -q -f name=${CONTAINER_NAME} | grep -q .; then
@@ -175,7 +187,7 @@ show_status() {
     docker ps -a --filter name=${CONTAINER_NAME} --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
     echo ""
     echo "=== 镜像信息 ==="
-    docker images --filter reference="${REGISTRY}/${IMAGE_NAME}" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
+    docker images --filter reference="${REGISTRY}/${REPOSITORY}" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
 }
 
 # 清理
@@ -242,15 +254,15 @@ main() {
             update_image $2
             ;;
         help|--help|-h)
-            show_help
+            print_help
             ;;
         *)
             if [ -z "$1" ]; then
-                show_help
+                print_help
             else
                 print_error "未知命令: $1"
                 echo ""
-                show_help
+                print_help
                 exit 1
             fi
             ;;
