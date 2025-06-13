@@ -9,9 +9,9 @@ services:
     environment:
       TZ: Asia/Shanghai
       #      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes' # 可配置无密码，注意配置 SPRING_DATASOURCE_PASSWORD=
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_USER: xfg
-      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: bhuang
+      MYSQL_PASSWORD: bhuang
     depends_on:
       - mysql-job-dbdata
     ports:

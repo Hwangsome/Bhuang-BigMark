@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bhuang.infrastructure.persistent.dao.StrategyAwardDao">
+    <resultMap id="StrategyAwardResultMap" type="com.bhuang.infrastructure.persistent.po.StrategyAward">
+        <id property="id" column="id" />
+        <result property="strategyId" column="strategy_id" />
+        <result property="awardId" column="award_id" />
+        <result property="awardTitle" column="award_title" />
+        <result property="awardSubtitle" column="award_subtitle" />
+        <result property="awardCount" column="award_count" />
+        <result property="awardCountSurplus" column="award_count_surplus" />
+        <result property="awardRate" column="award_rate" />
+        <result property="ruleModels" column="rule_models" />
+        <result property="sort" column="sort" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="selectById" resultMap="StrategyAwardResultMap">
+        SELECT * FROM strategy_award WHERE id = #{id}
+    </select>
+    <select id="selectAll" resultMap="StrategyAwardResultMap">
+        SELECT * FROM strategy_award
+    </select>
+    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward">
+        INSERT INTO strategy_award (strategy_id, award_id, award_title, award_subtitle, award_count, award_count_surplus, award_rate, rule_models, sort)
+        VALUES (#{strategyId}, #{awardId}, #{awardTitle}, #{awardSubtitle}, #{awardCount}, #{awardCountSurplus}, #{awardRate}, #{ruleModels}, #{sort})
+    </insert>
+    <update id="update" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward">
+        UPDATE strategy_award SET strategy_id=#{strategyId}, award_id=#{awardId}, award_title=#{awardTitle}, award_subtitle=#{awardSubtitle}, award_count=#{awardCount}, award_count_surplus=#{awardCountSurplus}, award_rate=#{awardRate}, rule_models=#{ruleModels}, sort=#{sort}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM strategy_award WHERE id = #{id}
+    </delete>
+</mapper>
