@@ -22,6 +22,20 @@
     <select id="selectAll" resultMap="StrategyAwardResultMap">
         SELECT * FROM strategy_award
     </select>
+    
+    <!-- 根据策略ID查询策略奖品列表 -->
+    <select id="queryStrategyAwardListByStrategyId" resultMap="StrategyAwardResultMap">
+        SELECT * FROM strategy_award 
+        WHERE strategy_id = #{strategyId} 
+        ORDER BY sort ASC
+    </select>
+    
+    <!-- 查询所有策略奖品列表 -->
+    <select id="queryStrategyAwardList" resultMap="StrategyAwardResultMap">
+        SELECT * FROM strategy_award 
+        ORDER BY strategy_id ASC, sort ASC
+    </select>
+    
     <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward">
         INSERT INTO strategy_award (strategy_id, award_id, award_title, award_subtitle, award_count, award_count_surplus, award_rate, rule_models, sort)
         VALUES (#{strategyId}, #{awardId}, #{awardTitle}, #{awardSubtitle}, #{awardCount}, #{awardCountSurplus}, #{awardRate}, #{ruleModels}, #{sort})
