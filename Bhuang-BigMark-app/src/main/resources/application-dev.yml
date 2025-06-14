@@ -17,7 +17,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://127.0.0.1:3306/big_market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
+    url: jdbc:mysql://127.0.0.1:13306/big_market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     pool-name: Retail_HikariCP
@@ -31,16 +31,16 @@ spring:
   type: com.zaxxer.hikari.HikariDataSource
   # Redis 配置
   redis:
-    host: 127.0.0.1
-    port: 26379
-    password:  # 如果没有密码请留空
-    database: 0
-    timeout: 3000
-    pool:
-      max-active: 8
-      max-wait: 10000
-      max-idle: 8
-      min-idle: 0
+    # Redisson 配置 (使用 spring boot starter)
+    redisson:
+      config: |
+        singleServerConfig:
+          address: "redis://127.0.0.1:26379"
+          database: 0
+          connectionPoolSize: 8
+          connectionMinimumIdleSize: 2
+          timeout: 3000
+          retryAttempts: 3
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml

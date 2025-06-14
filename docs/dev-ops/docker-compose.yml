@@ -56,6 +56,24 @@ services:
       timeout: 5s
       retries: 3
 
+  # RedisAdmin https://github.com/joeferner/redis-commander
+  redis-admin:
+    image: spryker/redis-commander:0.8.0
+    container_name: redis-admin
+    hostname: redis-commander
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - REDIS_HOSTS=local:redis:26379
+      - HTTP_USER=admin
+      - HTTP_PASSWORD=admin
+    networks:
+      - my-network
+    depends_on:
+      redis:
+        condition: service_healthy
+
 
 networks:
   my-network:

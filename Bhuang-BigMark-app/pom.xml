@@ -93,16 +93,15 @@
         <!-- 工程模块；启动依赖 trigger->domain, infrastructure-->
         <dependency>
             <groupId>com.bhuang</groupId>
+            <artifactId>Bhuang-BigMark-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bhuang</groupId>
             <artifactId>Bhuang-BigMark-trigger</artifactId>
         </dependency>
         <dependency>
             <groupId>com.bhuang</groupId>
             <artifactId>Bhuang-BigMark-infrastructure</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 
