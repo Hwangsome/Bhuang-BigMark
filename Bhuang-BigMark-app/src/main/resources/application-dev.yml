@@ -29,18 +29,13 @@ spring:
     connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
     connection-test-query: SELECT 1
   type: com.zaxxer.hikari.HikariDataSource
-  # Redis 配置
+  # Redis 配置 - 使用我们自定义的RedissonConfig
   redis:
-    # Redisson 配置 (使用 spring boot starter)
-    redisson:
-      config: |
-        singleServerConfig:
-          address: "redis://127.0.0.1:26379"
-          database: 0
-          connectionPoolSize: 8
-          connectionMinimumIdleSize: 2
-          timeout: 3000
-          retryAttempts: 3
+    host: 127.0.0.1
+    port: 26379
+    database: 0
+    timeout: 3000
+    # password: # 如果Redis有密码，在这里设置
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml

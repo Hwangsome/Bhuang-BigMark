@@ -29,6 +29,21 @@ public class Constants {
         public static final String STRATEGY_AWARD_ASSEMBLE_PREFIX = "strategy:award:assemble:";
 
         /**
+         * 策略规则缓存Key前缀
+         */
+        public static final String STRATEGY_RULE_PREFIX = "strategy:rule:";
+
+        /**
+         * 权重策略概率范围缓存Key前缀
+         */
+        public static final String STRATEGY_RATE_RANGE_WEIGHT_PREFIX = "strategy:rate:range:weight:";
+
+        /**
+         * 权重策略奖品装配缓存Key前缀
+         */
+        public static final String STRATEGY_AWARD_ASSEMBLE_WEIGHT_PREFIX = "strategy:award:assemble:weight:";
+
+        /**
          * 缓存过期时间（秒）
          */
         public static final class ExpireTime {
@@ -42,30 +57,67 @@ public class Constants {
 
         /**
          * 生成策略奖品列表缓存Key
+         * 格式: strategy#{strategyId}#awardlist
          * @param strategyId 策略ID
          * @return 缓存Key
          */
         public static String getStrategyAwardListKey(Long strategyId) {
-            return STRATEGY_AWARD_LIST_PREFIX + strategyId;
+            return "strategy#" + strategyId + "#awardlist";
         }
 
         /**
          * 生成策略概率范围缓存Key
+         * 格式: strategy#{strategyId}#raterange
          * @param strategyId 策略ID
          * @return 缓存Key
          */
         public static String getStrategyRateRangeKey(Long strategyId) {
-            return STRATEGY_RATE_RANGE_PREFIX + strategyId;
+            return "strategy#" + strategyId + "#raterange";
         }
 
         /**
          * 生成策略奖品装配缓存Key
+         * 格式: strategy#{strategyId}#assemble#{rateKey}
          * @param strategyId 策略ID
          * @param rateKey 概率key
          * @return 缓存Key
          */
         public static String getStrategyAwardAssembleKey(Long strategyId, Integer rateKey) {
-            return STRATEGY_AWARD_ASSEMBLE_PREFIX + strategyId + "_" + rateKey;
+            return "strategy#" + strategyId + "#assemble#" + rateKey;
+        }
+
+        /**
+         * 生成策略规则缓存Key
+         * 格式: strategy#{strategyId}#rule#{ruleModel}
+         * @param strategyId 策略ID
+         * @param ruleModel 规则模型
+         * @return 缓存Key
+         */
+        public static String getStrategyRuleKey(Long strategyId, String ruleModel) {
+            return "strategy#" + strategyId + "#rule#" + ruleModel;
+        }
+
+        /**
+         * 生成权重策略概率范围缓存Key
+         * 格式: strategy#{strategyId}#raterange#weight#{ruleWeightValue}
+         * @param strategyId 策略ID
+         * @param ruleWeightValue 权重值
+         * @return 缓存Key
+         */
+        public static String getStrategyRateRangeKeyByWeight(Long strategyId, String ruleWeightValue) {
+            return "strategy#" + strategyId + "#raterange#weight#" + ruleWeightValue;
+        }
+
+        /**
+         * 生成权重策略奖品装配缓存Key
+         * 格式: strategy#{strategyId}#assemble#weight#{ruleWeightValue}#{rateKey}
+         * @param strategyId 策略ID
+         * @param ruleWeightValue 权重值
+         * @param rateKey 概率key
+         * @return 缓存Key
+         */
+        public static String getStrategyAwardAssembleKeyByWeight(Long strategyId, String ruleWeightValue, Integer rateKey) {
+            return "strategy#" + strategyId + "#assemble#weight#" + ruleWeightValue + "#" + rateKey;
         }
     }
 
@@ -85,22 +137,23 @@ public class Constants {
         public static final Integer MAX_AWARD_COUNT = 1000;
         
         /**
-         * 默认概率精度
+         * 万分之一
          */
-        public static final Integer DEFAULT_RATE_PRECISION = 100;
+        public static final BigDecimal TEN_THOUSANDTH = new BigDecimal("0.0001");
+        
+        /**
+         * 默认概率精度（保留4位小数）
+         */
+        public static final int DEFAULT_RATE_PRECISION = 4;
         
         /**
          * 概率范围计算常量
          */
         public static final class ProbabilityRange {
-            /** 概率计算精度 */
-            public static final BigDecimal PRECISION = new BigDecimal("0.0001");
             /** 百分位 */
             public static final BigDecimal PERCENTAGE = new BigDecimal("0.01");
             /** 千分位 */
             public static final BigDecimal PERMILLAGE = new BigDecimal("0.001");
-            /** 万分位 */
-            public static final BigDecimal TEN_THOUSANDTH = new BigDecimal("0.0001");
         }
     }
 

@@ -5,6 +5,7 @@
         <id property="id" column="id" />
         <result property="strategyId" column="strategy_id" />
         <result property="strategyDesc" column="strategy_desc" />
+        <result property="ruleModel" column="rule_model" />
         <result property="createTime" column="create_time" />
         <result property="updateTime" column="update_time" />
     </resultMap>
@@ -15,12 +16,12 @@
     <select id="selectAll" resultMap="StrategyResultMap">
         SELECT * FROM strategy
     </select>
-    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.Strategy">
-        INSERT INTO strategy (strategy_id, strategy_desc)
-        VALUES (#{strategyId}, #{strategyDesc})
+    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.Strategy" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO strategy (strategy_id, strategy_desc, rule_model)
+        VALUES (#{strategyId}, #{strategyDesc}, #{ruleModel})
     </insert>
     <update id="update" parameterType="com.bhuang.infrastructure.persistent.po.Strategy">
-        UPDATE strategy SET strategy_id=#{strategyId}, strategy_desc=#{strategyDesc}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
+        UPDATE strategy SET strategy_id=#{strategyId}, strategy_desc=#{strategyDesc}, rule_model=#{ruleModel}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
     </update>
     <delete id="deleteById" parameterType="long">
         DELETE FROM strategy WHERE id = #{id}

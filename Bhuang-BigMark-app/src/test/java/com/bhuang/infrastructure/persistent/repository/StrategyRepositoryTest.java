@@ -126,7 +126,8 @@ public class StrategyRepositoryTest {
     public void testQueryNonExistentStrategy() {
         log.info("=== 测试查询不存在的策略 ===");
         
-        Long nonExistentStrategyId = 999999L;
+        // 使用一个绝对不存在的策略ID（超大数值）
+        Long nonExistentStrategyId = 999999999L;
         List<StrategyAwardEntity> result = strategyRepository.queryStrategyAwardList(nonExistentStrategyId);
         
         // 修正：空列表不等于null，应该检查是否为空

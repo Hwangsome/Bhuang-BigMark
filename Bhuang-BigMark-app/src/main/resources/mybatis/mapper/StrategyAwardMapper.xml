@@ -10,7 +10,7 @@
         <result property="awardCount" column="award_count" />
         <result property="awardCountSurplus" column="award_count_surplus" />
         <result property="awardRate" column="award_rate" />
-        <result property="ruleModels" column="rule_models" />
+        <result property="ruleModels" column="rule_model" />
         <result property="sort" column="sort" />
         <result property="createTime" column="create_time" />
         <result property="updateTime" column="update_time" />
@@ -36,12 +36,12 @@
         ORDER BY strategy_id ASC, sort ASC
     </select>
     
-    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward">
-        INSERT INTO strategy_award (strategy_id, award_id, award_title, award_subtitle, award_count, award_count_surplus, award_rate, rule_models, sort)
+    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO strategy_award (strategy_id, award_id, award_title, award_subtitle, award_count, award_count_surplus, award_rate, rule_model, sort)
         VALUES (#{strategyId}, #{awardId}, #{awardTitle}, #{awardSubtitle}, #{awardCount}, #{awardCountSurplus}, #{awardRate}, #{ruleModels}, #{sort})
     </insert>
     <update id="update" parameterType="com.bhuang.infrastructure.persistent.po.StrategyAward">
-        UPDATE strategy_award SET strategy_id=#{strategyId}, award_id=#{awardId}, award_title=#{awardTitle}, award_subtitle=#{awardSubtitle}, award_count=#{awardCount}, award_count_surplus=#{awardCountSurplus}, award_rate=#{awardRate}, rule_models=#{ruleModels}, sort=#{sort}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
+        UPDATE strategy_award SET strategy_id=#{strategyId}, award_id=#{awardId}, award_title=#{awardTitle}, award_subtitle=#{awardSubtitle}, award_count=#{awardCount}, award_count_surplus=#{awardCountSurplus}, award_rate=#{awardRate}, rule_model=#{ruleModels}, sort=#{sort}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
     </update>
     <delete id="deleteById" parameterType="long">
         DELETE FROM strategy_award WHERE id = #{id}
