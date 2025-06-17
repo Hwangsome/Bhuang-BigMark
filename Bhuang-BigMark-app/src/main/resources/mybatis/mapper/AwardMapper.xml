@@ -17,12 +17,18 @@
     <select id="selectAll" resultMap="AwardResultMap">
         SELECT * FROM award
     </select>
-    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.Award">
+    <insert id="insert" parameterType="com.bhuang.infrastructure.persistent.po.Award" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO award (award_id, award_key, award_config, award_desc)
         VALUES (#{awardId}, #{awardKey}, #{awardConfig}, #{awardDesc})
     </insert>
     <update id="update" parameterType="com.bhuang.infrastructure.persistent.po.Award">
-        UPDATE award SET award_id=#{awardId}, award_key=#{awardKey}, award_config=#{awardConfig}, award_desc=#{awardDesc}, create_time=#{createTime}, update_time=#{updateTime} WHERE id=#{id}
+        UPDATE award SET 
+            award_id=#{awardId}, 
+            award_key=#{awardKey}, 
+            award_config=#{awardConfig}, 
+            award_desc=#{awardDesc}, 
+            update_time=NOW() 
+        WHERE id=#{id}
     </update>
     <delete id="deleteById" parameterType="int">
         DELETE FROM award WHERE id = #{id}
